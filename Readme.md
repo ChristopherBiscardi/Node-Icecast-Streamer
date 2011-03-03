@@ -5,12 +5,12 @@ Deps:
 flac
 http://flac.sourceforge.net/download.html
 
-ffmpeg
-lame
-oggenc (located in one of the libogg packages, Vorbis-tools maybe?)
+ffmpeg  
+lame  
+oggenc (located in one of the libogg packages, Vorbis-tools maybe?)  
 
 NPM:    
-icecast-stack  
+icecast-stack    
 
 
 Step 1
@@ -25,15 +25,15 @@ This can be adjusted - see below
 
 Step 3
 ==============
-pipe the output from decodeAll to the node-Icecast server
+pipe the output from decodeAll to the node-Icecast server  
 ./decodeAll.sh | node server.js
 
 Step 4
 ============
-Listen to the stream by navigating to the IP address of the computer ie. 255.255.255.255:5556
+Listen to the stream by navigating to the IP address of the computer ie. 255.255.255.255:5556  
 Will stream .ogg or .mp3 based on browser  
 Works on Mac in Safari, Chrome, Firefox  
-Works on Linux in Chrome, Firefox
+Works on Linux in Chrome, Firefox  
 
 
 
