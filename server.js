@@ -3,9 +3,37 @@ var fs = require("fs");
 var http = require("http");
 var spawn = require("child_process").spawn;
 var icecast = require("icecast-stack");
+var util   = require('util'),
+    exec  = require('child_process').exec,
+    ffmpeg,
+    currentSongNo = 0,
+    songList;
 
-// An external script is meant to be writing PCM data to stdin of the server.
-var stdin = process.openStdin();
+songList = fs.readdirSync(__dirname + '/music');
+
+//ffmpeg decoder child process
+function spawnnewffmpeg(songNo){
+		console.log(songList);
+		console.log("current song is" + currentSongNo);
+		console.log("songlist[songno] = " + songList[songNo]);
+		if(songList[songNo]){
+			}
+			else{
+				songNo = 0;
+				currentSongNo = 0;
+				}
+	song = __dirname + '/music/' + songList[songNo];
+	console.log(song);
+	var otherparams = ['-i', song, '-f', 's16le', '-acodec', 'pcm_s16le', '-ac', '2', '-ar', '44100', '-']
+	ffmpeg = spawn('ffmpeg', otherparams);
+	ffmpeg.stdout.on("data", outChunk)
+	      ffmpeg.on('exit', function (code) {
+         console.log('ithappened');
+      });
+	};
+	
+ spawnnewffmpeg(0);
+
 
 // Stdin is expecting raw PCM data of the format:
 var SAMPLE_SIZE = 16;   // 16-bit samples, Little-Endian, Signed
@@ -28,17 +56,18 @@ var totalBytes = 0;
 // by now, and pause() if we've past that value.
 var bocData = [];
 var bocSize = BYTES_PER_SECOND * 10; // 10 raw PCM seconds in bytes
-stdin.on("data", function(chunk) {
+//ffmpeg.stdout.on("data", function(chunk) {
+function outChunk(chunk){
   totalBytes += chunk.length;
   var totalSeconds = ((new Date()) - startTime) / 1000;
   var expected = totalSeconds * BYTES_PER_SECOND;
   //console.log(totalBytes, expected);
   if (totalBytes > expected) {
-    stdin.pause();
+    ffmpeg.stdout.pause();
     // Use this byte count to calculate how many seconds ahead we are.
     var remainder = totalBytes - expected;
     setTimeout(function() {
-      stdin.resume();
+      ffmpeg.stdout.resume();
     }, remainder / BYTES_PER_SECOND * 1000);
   }
 
@@ -57,7 +86,7 @@ stdin.on("data", function(chunk) {
     // We're assuming bocData[0] has AT LEAST BLOCK_ALIGN bytes in it.
     bocData[0] = bocData[0].slice(stillToRemove);
   }
-});
+};
 function currentBocSize() {
   var size = 0, i=0, l=bocData.length;
   for (; i<l; i++) {
@@ -86,7 +115,7 @@ var currentTrack = "unknown";
 var currentTrackStartTime;
 var duration;
 var dId;
-stdin.on("metadata", function(metadata, dur) {
+ffmpeg.stdout.on("metadata", function(metadata, dur) {
   currentTrack = metadata;
   console.error(("Received 'metadata' event: ".bold + currentTrack).blue);
   clients.forEach(function(client) {
@@ -175,14 +204,14 @@ http.createServer(function(req, res) {
       if (mp3.stdin.writable)
         mp3.stdin.write(chunk);
     }
-    stdin.on("data", callback);
+    ffmpeg.stdout.on("data", callback);
     clients.push(res);
     console.error((("New MP3 " + (acceptsMetadata ? "Icecast " : "") + "Client Connected: "+req.connection.remoteAddress+"!").bold + " Total " + clients.length).green);
     
     req.connection.on("close", function() {
       // This occurs when the HTTP client closes the connection.
       clients.splice(clients.indexOf(res), 1);
-      stdin.removeListener("data", callback);
+      ffmpeg.stdout.removeListener("data", callback);
       mp3.kill();
       console.error((("MP3 " + (acceptsMetadata ? "Icecast " : "") + "Client Disconnected: "+req.connection.remoteAddress+" :(").bold + " Total " + clients.length).red);
     });
@@ -246,14 +275,14 @@ http.createServer(function(req, res) {
       if (ogg.stdin.writable)
         ogg.stdin.write(chunk);
     }
-    stdin.on("data", callback);
+    ffmpeg.stdout.on("data", callback);
     clients.push(res);
     console.error((("New OGG " + (acceptsMetadata ? "Icecast " : "") + "Client Connected: "+req.connection.remoteAddress+"!").bold + " Total " + clients.length).green);
 
     req.connection.on("close", function() {
       // This occurs when the HTTP client closes the connection.
       clients.splice(clients.indexOf(res), 1);
-      stdin.removeListener("data", callback);
+      ffmpeg.stdout.removeListener("data", callback);
       ogg.kill();
       console.error((("OGG " + (acceptsMetadata ? "Icecast " : "") + "Client Disconnected: "+req.connection.remoteAddress+" :(").bold + " Total " + clients.length).red);
     });
@@ -296,7 +325,18 @@ http.createServer(function(req, res) {
       });
     }
 
-  // Otherwise just serve the "index.html" file.
+  // check for next song
+  } else if (req.url == "/next"){
+  	if (req.method == "GET"){
+  		currentSongNo = currentSongNo + 1;
+  		spawnnewffmpeg(currentSongNo);
+  		}
+  		}else if (req.url == "/back"){
+  			if (req.method == "POST"){
+  		spawnnewffmpeg(currentSong - 1);
+  		}
+  			  
+  		  // Otherwise just serve the "index.html" file.
   } else {
     fs.readFile(__dirname + "/index.html", function(err, buffer) {
       res.writeHead(200, {
