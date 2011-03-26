@@ -1,0 +1,18 @@
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #00B7FF;
+}
+
+#playlist ul li {
+	background-color: #333;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	}
+
+#playlist ul li:hover{
+	background-color: #fff;
+	}

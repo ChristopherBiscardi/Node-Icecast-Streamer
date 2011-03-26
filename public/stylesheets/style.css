@@ -1,0 +1,28 @@
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #00B7FF;
+}
+
+#playlist ul li {
+	background-color: #333;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	}
+
+#playlist ul li:hover{
+	background-color: #fff;
+	}
+	
+.right-arrow {
+
+border: 8px solid white;
+border-width: 8px 0 8px 8px;
+border-color: black white;
+font-size: 0; /* needed for IE browsers, if this isn't set to 0 you will end up with a trapezoid */
+line-height: 0;
+
+}
