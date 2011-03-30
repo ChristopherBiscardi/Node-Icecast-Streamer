@@ -16,8 +16,8 @@ Step 1
 clone the github repo and install dependencies:
 
 Ubuntu:
-FFMPEG and Vorbis Tools (oggenc)
-sudo apt-get ffmpeg vorbis-tools
+FFMPEG and Vorbis Tools (oggenc)  
+    sudo apt-get ffmpeg vorbis-tools
 
 LAME:
     wget http://sourceforge.net/projects/lame/files/lame/3.98.4/lame-3.98.4.tar.gz/download
