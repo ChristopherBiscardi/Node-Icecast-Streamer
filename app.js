@@ -45,6 +45,8 @@ songList = fs.readdirSync(__dirname + '/music');
 
 
 function spawnnewffmpeg(req,res,next){
+   console.log(req.headers);
+   console.log(req.url);
 	console.log(req.params);
 		console.log("current song is" + req.params.song);
 		
@@ -211,14 +213,14 @@ function encode(req,res,next){
     }
     ffmpeg.stdout.on("data", callback);
     clients.push(res);
-   // console.error((("New OGG " + (acceptsMetadata ? "Icecast " : "") + "Client Connected: "+req.connection.remoteAddress+"!").bold + " Total " + clients.length).green);
+    console.error((("New OGG " + "Client Connected: "+req.connection.remoteAddress+"!").bold + " Total " + clients.length).green);
 
     req.connection.on("close", function() {
       // This occurs when the HTTP client closes the connection.
       clients.splice(clients.indexOf(res), 1);
       ffmpeg.stdout.removeListener("data", callback);
       ogg.kill();
-     // console.error((("OGG " + (acceptsMetadata ? "Icecast " : "") + "Client Disconnected: "+req.connection.remoteAddress+" :(").bold + " Total " + clients.length).red);
+      console.error((("OGG " + "Client Disconnected: "+req.connection.remoteAddress+" :(").bold + " Total " + clients.length).red);
     });
 			}
 			else{
@@ -231,7 +233,7 @@ app.get('/', function(req, res){
     title: 'Mediabox'
   });
 });
-app.all('/music/:type/:song', spawnnewffmpeg, encode, function(req,res,next) {
+app.get('/music/:type/:song', spawnnewffmpeg, encode, function(req,res,next) {
 
 	});
 app.all('/playlist', function(req, res){
