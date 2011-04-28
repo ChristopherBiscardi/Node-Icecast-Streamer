@@ -236,6 +236,9 @@ app.get('/', function(req, res){
 app.get('/music/:type/:song', spawnnewffmpeg, encode, function(req,res,next) {
 
 	});
+app.all('/json', function(req, res){
+
+});
 app.all('/playlist', function(req, res){
 	res.render('playlist', {
 		layout: false,
