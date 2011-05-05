@@ -2,14 +2,15 @@ Icecast with node
 =======================
 Deps:
 
+node v0.4.7  
+
 ffmpeg  
 lame  
 oggenc (vorbis-tools)  
 
 NPM:    
-icecast-stack    
 colors  
-express 2.x  
+express  
 
 Step 1
 ==============
@@ -52,6 +53,5 @@ Will stream .ogg or .mp3 based on browser
 TODO
 ===============
 Similar artists list, client side  
-make it look nicer and clean up code (jslint)  
 test on ipod  
 test on Android, (support for audio tag, no support for codecs? AKA sometimes it works, sometimes it doesn't)  
