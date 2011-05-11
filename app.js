@@ -229,7 +229,12 @@ app.get('/', function(req, res){
   });
 });
 app.get('/music/mp3/*.mp3', function(req, res){
-  fs.createReadStream(__dirname+'/music/01\ Little\ Things.mp3').pipe(res.write);
+  console.log(req.params[0]);
+  fs.createReadStream(__dirname+'/music/' + req.params[0] + '.mp3').pipe(res);
+  });
+app.get('/music/ogg/*.ogg', function(req, res){
+  console.log(req.params[0]);
+  fs.createReadStream(__dirname+'/music/' + req.params[0] + '.ogg').pipe(res);
   });
 app.get('/music/:type/:song', spawnnewffmpeg, encode, function(req,res,next) {
 
