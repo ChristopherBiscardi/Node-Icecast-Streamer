@@ -1,0 +1,17 @@
+{
+  "name": "icecast-streamer",
+  "description": "An Icecast clone written in node.js for streaming audio",
+  "version": "0.0.0",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/ChristopherBiscardi/Node-Icecast-Streamer.git"
+  },
+  "author": "Christopher Biscardi <Christopher.Biscardi@sketcht.com> (ChristopherBiscardi.com)",
+  "main": "index.js",
+  "directories": {
+    "lib": "/lib"
+  },
+  "engines": {
+    "node": "v.0.4.0"
+  }
+}
