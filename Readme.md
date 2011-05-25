@@ -36,3 +36,22 @@ Step 2
 ==============
 mount connect middleware
     use('/station', icecase.handleIcecast)
+
+To create a Station:
+===============
+
+POST to /station  
+
+with data in the form of:  
+    name=thenameofyourstation&f=create&file=file  
+
+where name is the name of the new station  
+f is the function create a new station  
+and file is the first song for the playlist  
+
+To add a song to a playlist
+=============================
+
+POST to /station  
+
+with name, f=add and filepaths  
